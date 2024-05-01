@@ -12,7 +12,7 @@ const DashboardNav = () => {
         <Link to="/" className="flex flex-1 items-center gap-2">
           <img src="./logo.png" alt="" className="w-8" />
           <h1 className="whitespace-nowrap text-lg font-medium text-black">
-            FreeLance Hub
+            WorkLoop
           </h1>
         </Link>
         <ul className="hidden items-center gap-10 text-sm font-medium lg:flex [&>*]:cursor-pointer [&>*]:py-5">

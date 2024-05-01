@@ -19,8 +19,8 @@ const Footer = () => {
       <div className="grid gap-10 py-10 lg:grid-cols-2 lg:gap-0">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <img src="./logo.png" alt="" className="size-8" />
-            <span className="text-xl font-semibold">FreeLance Hub</span>
+            <img src="./logo.png" alt="Logo" className="size-8" />
+            <span className="text-xl font-semibold">WorkLoop</span>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">
             Streamline your freelance business with our job finder platform.
@@ -64,7 +64,7 @@ const Footer = () => {
       </div>
       <hr />
       <div className="mt-10 flex flex-wrap items-center justify-between gap-2 text-sm lg:gap-0">
-        <span>Copyright {new Date().getFullYear()} FreeLance Hub.</span>
+        <span>Copyright {new Date().getFullYear()} WorkLoop.</span>
         <div className="space-x-3">
           <span className="text-muted-foreground">Terms and Condition</span>
           <span className="text-muted-foreground">Privacy Policy</span>

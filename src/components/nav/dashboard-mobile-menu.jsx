@@ -1,7 +1,6 @@
 import { Menu } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const DashboardMobileMenu = () => {
   return (
@@ -16,7 +15,7 @@ const DashboardMobileMenu = () => {
           <div className="flex h-full flex-col">
             <div className="flex items-center gap-3">
               <img src="./logo.png" alt="" className="w-8" />
-              <h1 className="text-lg font-medium">FreeLance Hub</h1>
+              <h1 className="text-lg font-medium">WorkLoop</h1>
             </div>
             <ul className="mt-10 space-y-5 ps-3 [&>*]:cursor-pointer">
               <li className="hover:text-primary">Find Works</li>

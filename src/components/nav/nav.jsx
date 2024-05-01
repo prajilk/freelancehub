@@ -7,7 +7,7 @@ const Nav = () => {
     <nav className="container-lg absolute inset-0 flex h-fit w-full items-center justify-center py-3 text-white">
       <Link to="/" className="flex flex-1 items-center gap-2">
         <img src="./logo.png" alt="" className="w-8" />
-        <h1 className="text-lg font-medium">FreeLance Hub</h1>
+        <h1 className="text-lg font-medium">WorkLoop</h1>
       </Link>
       <ul className="hidden items-center gap-10 lg:flex [&>*]:cursor-pointer">
         <li className="hover:text-primary">Home</li>

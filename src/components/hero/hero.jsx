@@ -11,7 +11,7 @@ const easeDownVariants = {
 
 const Hero = () => {
   return (
-    <div className="w-full bg-[url(/hero.png)] bg-cover bg-no-repeat pb-20">
+    <div className="w-full bg-[#111111] bg-[url(/hero.png)] bg-cover bg-no-repeat pb-20">
       <div className="container-lg flex h-full flex-col items-center gap-8 pt-36 text-white">
         <motion.h1
           initial="initial"
