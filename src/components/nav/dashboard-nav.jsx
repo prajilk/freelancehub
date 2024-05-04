@@ -1,32 +1,42 @@
-import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Link, useLocation } from "react-router-dom";
 import { Bell, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 import DashboardMobileMenu from "./dashboard-mobile-menu";
 import { Profile } from "./profile";
 
 const DashboardNav = () => {
+  const location = useLocation();
+  const pathname = location.pathname;
+
   return (
     <nav className="h-fit w-full bg-white text-muted-foreground">
       <div className="container-lg flex items-center justify-center py-3 lg:py-0">
         <Link to="/" className="flex flex-1 items-center gap-2">
-          <img src="./logo.png" alt="" className="w-8" />
-          <h1 className="whitespace-nowrap text-lg font-medium text-black">
+          <img src="/logo.png" alt="" className="w-8" />
+          <h1 className="whitespace-nowrap text-lg font-semibold text-black">
             WorkLoop
           </h1>
         </Link>
         <ul className="hidden items-center gap-10 text-sm font-medium lg:flex [&>*]:cursor-pointer [&>*]:py-5">
-          <li className="border-transparen flex h-full items-center border-b-2 border-primary text-primary">
-            Find Works
+          <li
+            className={`${pathname === "/dashboard" && "border-b-primary text-primary"} flex h-full items-center border-b-2 border-transparent hover:border-primary hover:text-primary`}
+          >
+            <Link to={"/dashboard"}>Find Works</Link>
           </li>
-          <li className="border-b-2 border-transparent hover:border-primary hover:text-primary">
-            Find Jobs
+          <li
+            className={`${pathname === "/dashboard/jobs" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
+          >
+            <Link to={"/dashboard/jobs"}>Find Jobs</Link>
           </li>
-          <li className="border-b-2 border-transparent hover:border-primary hover:text-primary">
-            Find Freelancers
+          <li
+            className={`${pathname === "/dashboard/freelancers" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
+          >
+            <Link to={"/dashboard/freelancers"}>Find Freelancers</Link>
           </li>
-          <li className="border-b-2 border-transparent hover:border-primary hover:text-primary">
-            Upload Proposals
+          <li
+            className={`${pathname === "/dashboard/upload-proposals" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
+          >
+            <Link to={"/dashboard/upload-proposals"}>Upload Proposals</Link>
           </li>
         </ul>
 

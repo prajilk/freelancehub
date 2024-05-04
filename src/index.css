@@ -77,10 +77,16 @@
   .container-lg {
     @apply px-4 sm:container lg:px-0;
   }
-}
-
-@layer components {
   .hide-scrollbar::-webkit-scrollbar {
-    display: none;
+    @apply hidden;
+  }
+  .show-scrollbar::-webkit-scrollbar {
+    @apply block;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    @apply w-1.5;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-primary;
   }
 }

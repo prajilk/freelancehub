@@ -1,4 +1,10 @@
-import { Bookmark, LogOut, Settings, User } from "lucide-react";
+import {
+  Bookmark,
+  BriefcaseBusiness,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react";
 
 import {
   DropdownMenu,
@@ -10,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Link } from "react-router-dom";
 
 export function Profile() {
   return (
@@ -25,12 +32,18 @@ export function Profile() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+            <Link to="/dashboard/profile" className="flex w-full items-center">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Bookmark className="mr-2 h-4 w-4" />
             <span>Bookmarks</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <BriefcaseBusiness className="mr-2 h-4 w-4" />
+            <span>Previous Works</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />

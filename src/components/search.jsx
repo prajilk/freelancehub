@@ -1,24 +1,34 @@
+import FilterDrawer from "./drawer/filter-drawer";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Search as SearchIcon } from "lucide-react";
 
-const Search = () => {
+const Search = ({ searchFor }) => {
   return (
     <div className="w-full space-y-4 rounded-lg bg-primary p-5 text-white shadow">
-      <h1 className="text-xl font-medium">Are you looking for a dream job?</h1>
+      <h1 className="text-xl font-medium">
+        Are you looking for a{" "}
+        {searchFor === "work" ? "freelance work" : "dream job"}?
+      </h1>
       <p className="max-w-xl text-sm text-zinc-200">
-        FreeLance Hub is a place where you can find your dream job in various
-        skills, more than 1000 jobs are available here
+        FreeLance Hub is a place where you can find your{" "}
+        {searchFor === "work" ? "freelance work" : "dream job"} in various
+        skills, more than 1000 {searchFor === "work" ? "work" : "job"} are
+        available here
       </p>
       <div className="flex gap-2">
         <Input
           className="border-none bg-white/20"
           startIcon={<SearchIcon size={18} />}
         />
-        <Button className="bg-white font-semibold text-primary hover:bg-white/90">
-          Search Jobs
+        <FilterDrawer />
+        <Button className="hidden bg-white font-semibold text-primary hover:bg-white/90 lg:block">
+          Search {searchFor === "work" ? "Works" : "Jobs"}
         </Button>
       </div>
+      <Button className="w-full bg-white font-semibold text-primary hover:bg-white/90 lg:hidden">
+        Search {searchFor === "work" ? "Works" : "Jobs"}
+      </Button>
     </div>
   );
 };

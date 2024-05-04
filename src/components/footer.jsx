@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="container-lg py-10 pt-20">
+    <footer className="container-lg py-10 md:pt-20">
       <div className="flex flex-wrap items-center justify-between gap-5 rounded-md bg-primary p-6 text-white lg:gap-0 lg:p-10">
         <h1 className="text-2xl font-medium">
           Find your best opportunities today!
@@ -19,7 +19,7 @@ const Footer = () => {
       <div className="grid gap-10 py-10 lg:grid-cols-2 lg:gap-0">
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <img src="./logo.png" alt="Logo" className="size-8" />
+            <img src="/logo.png" alt="Logo" className="size-8" />
             <span className="text-xl font-semibold">WorkLoop</span>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">

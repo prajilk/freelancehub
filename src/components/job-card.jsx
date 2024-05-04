@@ -1,18 +1,17 @@
-import { Bookmark, MapPin, User } from "lucide-react";
+import { Bookmark, MapPin } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { LongText } from "./ui/long-text";
 
-const WorkCard = ({ title, skills, country, experience, applicants }) => {
+const JobCard = ({ title, image, skills, country, applicants }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   return (
     <div className="w-full cursor-pointer rounded-lg bg-white p-7 shadow">
       <div className="flex items-center gap-3">
+        {image && <img src={image} alt="" className="size-10 flex-shrink-0" />}
         <div>
           <h3 className="font-semibold">{title}</h3>
-          <span className="text-xs text-muted-foreground">
-            Hourly • Budget: $20 - $40
-          </span>
+          <span className="text-xs text-muted-foreground">Grapho • Remote</span>
         </div>
         <Button
           size="icon"
@@ -30,17 +29,9 @@ const WorkCard = ({ title, skills, country, experience, applicants }) => {
         ensuring it is user-friendly, functional and secure.
       </LongText>
 
-      <div className="mb-5 mt-3 flex gap-5">
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <MapPin size={15} />
-          <b>{country}</b>
-        </div>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
-          <User size={15} />
-          <span>
-            Looking for: <b>{experience}</b>
-          </span>
-        </div>
+      <div className="mb-5 mt-3 flex items-center gap-1 text-xs text-muted-foreground">
+        <MapPin size={15} />
+        <b>{country}</b>
       </div>
 
       <div className="flex flex-wrap items-center gap-5 text-xs">
@@ -65,4 +56,4 @@ const WorkCard = ({ title, skills, country, experience, applicants }) => {
   );
 };
 
-export default WorkCard;
+export default JobCard;

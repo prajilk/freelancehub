@@ -1,4 +1,4 @@
-import Filter from "../components/filter";
+import WorkFilter from "../components/filter/work-filter";
 import DashboardNav from "../components/nav/dashboard-nav";
 import Search from "../components/search";
 import WorkCard from "../components/work-card";
@@ -8,12 +8,13 @@ const Dashboard = () => {
     <>
       <DashboardNav />
       <div className="container-lg my-10 grid grid-cols-4 gap-3">
-        <Filter />
+        <div className="hidden lg:block">
+          <WorkFilter />
+        </div>
         <div className="col-span-4 space-y-5 lg:col-span-3">
-          <Search />
+          <Search searchFor="work" />
           <WorkCard
             title="Building end-to-end crowdfunding application"
-            image="./artistry.png"
             country="India"
             experience="Expert"
             applicants={14}
@@ -21,7 +22,6 @@ const Dashboard = () => {
           />
           <WorkCard
             title="UX Copywriter for company profile landing page"
-            image="./grapho.png"
             country="USA"
             experience="Intermediate"
             applicants={20}

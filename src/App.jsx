@@ -8,9 +8,13 @@ import queryConfig from "./config/react-query.config";
 import Error404 from "./components/common/error404";
 import LandingPage from "./pages/landing-page";
 import Footer from "./components/footer";
+import Jobs from "./pages/jobs";
+import Freelancers from "./pages/freelancers";
+import UploadProposalRoutes from "./routes/upload-proposal";
 
-const Dashboard = lazy(() => import("./pages/dashboard"));
 const Login = lazy(() => import("./pages/login"));
+const Dashboard = lazy(() => import("./pages/dashboard"));
+const Profile = lazy(() => import("./pages/profile"));
 
 const queryClient = new QueryClient({
   defaultOptions: queryConfig,
@@ -27,6 +31,13 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<ProtectedRoute />}>
               <Route index element={<Dashboard />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="jobs" element={<Jobs />} />
+              <Route path="freelancers" element={<Freelancers />} />
+              <Route
+                path="upload-proposals/*"
+                element={<UploadProposalRoutes />}
+              />
             </Route>
           </Routes>
         </QueryClientProvider>
