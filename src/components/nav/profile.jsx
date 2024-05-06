@@ -43,7 +43,9 @@ export function Profile() {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BriefcaseBusiness className="mr-2 h-4 w-4" />
-            <span>Previous Works</span>
+            <Link to="/dashboard/my-history" className="w-full">
+              My history
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />

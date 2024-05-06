@@ -61,7 +61,11 @@ const DashboardMobileMenu = () => {
                 </Link>
               </li>
               <li className="flex hover:text-primary">Bookmarks</li>
-              <li className="flex hover:text-primary">Previous Works</li>
+              <li className="flex hover:text-primary">
+                <Link to="/dashboard/my-history" className="w-full">
+                  My history
+                </Link>
+              </li>
               <li className="flex hover:text-primary">Settings</li>
               <hr />
               <li className="flex items-center text-destructive">

@@ -2,6 +2,7 @@ import { Bookmark, MapPin } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { LongText } from "./ui/long-text";
+import { Link } from "react-router-dom";
 
 const JobCard = ({ title, image, skills, country, applicants }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -47,9 +48,16 @@ const JobCard = ({ title, image, skills, country, applicants }) => {
             ))}
           </div>
         </div>
-        <div className="flex w-full items-center justify-between text-muted-foreground">
+        <div className="flex w-full flex-wrap items-center justify-between text-muted-foreground">
           <span className="flex-shrink-0 text-sm">{applicants} Applicants</span>
-          <span className="flex-shrink-0">Posted 5 mins ago</span>
+          <div className="flex w-full items-center justify-between gap-4 md:w-fit md:justify-start">
+            <span className="flex-shrink-0">Posted 5 mins ago</span>
+            <Link to="/dashboard/jobs/jobid">
+              <Button size="sm" className="text-sm">
+                View job
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

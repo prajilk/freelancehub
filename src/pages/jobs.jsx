@@ -13,6 +13,7 @@ const Jobs = () => {
         </div>
         <div className="col-span-4 space-y-5 lg:col-span-3">
           <Search searchFor="job" />
+
           <JobCard
             applicants={120}
             country="India"

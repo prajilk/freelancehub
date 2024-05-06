@@ -2,11 +2,12 @@ import { Bookmark, MapPin, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { LongText } from "./ui/long-text";
+import { Link } from "react-router-dom";
 
 const WorkCard = ({ title, skills, country, experience, applicants }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   return (
-    <div className="w-full cursor-pointer rounded-lg bg-white p-7 shadow">
+    <div className="w-full rounded-lg bg-white p-7 shadow">
       <div className="flex items-center gap-3">
         <div>
           <h3 className="font-semibold">{title}</h3>
@@ -56,9 +57,16 @@ const WorkCard = ({ title, skills, country, experience, applicants }) => {
             ))}
           </div>
         </div>
-        <div className="flex w-full items-center justify-between text-muted-foreground">
+        <div className="flex w-full flex-wrap items-center justify-between text-muted-foreground">
           <span className="flex-shrink-0 text-sm">{applicants} Applicants</span>
-          <span className="flex-shrink-0">Posted 5 mins ago</span>
+          <div className="flex w-full items-center justify-between gap-4 md:w-fit md:justify-start">
+            <span className="flex-shrink-0">Posted 5 mins ago</span>
+            <Link to="/dashboard/works/workid">
+              <Button size="sm" className="text-sm">
+                View
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -8,13 +8,15 @@ import queryConfig from "./config/react-query.config";
 import Error404 from "./components/common/error404";
 import LandingPage from "./pages/landing-page";
 import Footer from "./components/footer";
-import Jobs from "./pages/jobs";
 import Freelancers from "./pages/freelancers";
-import UploadProposalRoutes from "./routes/upload-proposal";
+import WorksRoute from "./routes/works";
 
 const Login = lazy(() => import("./pages/login"));
 const Dashboard = lazy(() => import("./pages/dashboard"));
 const Profile = lazy(() => import("./pages/profile"));
+const UploadProposalRoutes = lazy(() => import("./routes/upload-proposal"));
+const JobsRoute = lazy(() => import("./routes/job"));
+const MyHistory = lazy(() => import("./pages/my-history"));
 
 const queryClient = new QueryClient({
   defaultOptions: queryConfig,
@@ -32,8 +34,10 @@ function App() {
             <Route path="/dashboard" element={<ProtectedRoute />}>
               <Route index element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
-              <Route path="jobs" element={<Jobs />} />
+              <Route path="my-history" element={<MyHistory />} />
               <Route path="freelancers" element={<Freelancers />} />
+              <Route path="jobs/*" element={<JobsRoute />} />
+              <Route path="works/*" element={<WorksRoute />} />
               <Route
                 path="upload-proposals/*"
                 element={<UploadProposalRoutes />}
