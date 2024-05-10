@@ -1,10 +1,15 @@
 import { FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
 import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Footer = () => {
+  const location = useLocation();
+  const pathname = location.pathname;
+
   return (
-    <footer className="container-lg py-10 md:pt-20">
+    <footer
+      className={`${pathname === "/login" || (pathname === "/register" && "hidden")} container-lg py-10 md:pt-20`}
+    >
       <div className="flex flex-wrap items-center justify-between gap-5 rounded-md bg-primary p-6 text-white lg:gap-0 lg:p-10">
         <h1 className="text-2xl font-medium">
           Find your best opportunities today!

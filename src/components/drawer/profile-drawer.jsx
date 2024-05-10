@@ -7,10 +7,15 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { ProfileForm } from "../forms/profile-form";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-const ProfileDrawer = ({ profileData, setMainSocials }) => {
+const ProfileDrawer = () => {
+  const search = useSearchParams();
+  const [open, setOpen] = useState(search[0].get("profile-form") === "1");
+
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <button className="absolute right-0 top-0 m-3 flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
           <Pencil size={18} />
@@ -24,7 +29,7 @@ const ProfileDrawer = ({ profileData, setMainSocials }) => {
           </DrawerClose>
         </div>
         <div className="hide-scrollbar lg:show-scrollbar lg:scrollbar-thin mt-7 overflow-y-scroll px-3">
-          <ProfileForm setMainSocials={setMainSocials} {...profileData} />
+          <ProfileForm />
         </div>
       </DrawerContent>
     </Drawer>

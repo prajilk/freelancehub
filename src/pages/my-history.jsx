@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import UploadedJobs from "../components/my-history/uploaded-jobs";
 import UploadedWorks from "../components/my-history/uploaded-works";
 import WorkHistory from "../components/my-history/work-history";
@@ -10,11 +11,13 @@ import {
 } from "../components/ui/tabs";
 
 const MyHistory = () => {
+  const tab = useSearchParams()[0].get("tab") || "work-history";
+
   return (
     <>
       <DashboardNav />
       <div className="container-lg mt-4">
-        <Tabs defaultValue="work-history">
+        <Tabs defaultValue={tab}>
           <TabsList className="bg-transparent">
             <TabsTrigger
               value="work-history"

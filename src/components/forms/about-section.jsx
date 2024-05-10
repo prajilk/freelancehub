@@ -11,6 +11,11 @@ import { Textarea } from "../ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { DialogClose } from "../ui/dialog";
+import { useUpdateAbout } from "../../api/about";
+import { toast } from "sonner";
+import LoadingButton from "../ui/loading-button";
+import { useDispatch } from "react-redux";
+import { updateAbout } from "../../redux/userSlice";
 
 const aboutSchema = z.object({
   about: z.string().min(100, {
@@ -26,11 +31,18 @@ const AboutForm = ({ about = "" }) => {
     },
   });
 
+  const dispatch = useDispatch();
+
+  function onSuccess() {
+    dispatch(updateAbout(form.getValues().about));
+    toast.success("About section updated successfully.");
+  }
+
+  const mutation = useUpdateAbout(onSuccess);
+
   // 2. Define a submit handler.
   function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    mutation.mutate(values);
   }
 
   return (
@@ -63,7 +75,9 @@ const AboutForm = ({ about = "" }) => {
               Cancel
             </Button>
           </DialogClose>
-          <Button type="submit">Save</Button>
+          <LoadingButton isLoading={mutation.isPending} type="submit">
+            Save
+          </LoadingButton>
         </div>
       </form>
     </Form>

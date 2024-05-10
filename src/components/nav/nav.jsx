@@ -10,10 +10,15 @@ const Nav = () => {
         <h1 className="text-lg font-medium">WorkLoop</h1>
       </Link>
       <ul className="hidden items-center gap-10 lg:flex [&>*]:cursor-pointer">
-        <li className="hover:text-primary">Home</li>
-        <li className="hover:text-primary">About</li>
-        <li className="hover:text-primary">Jobs</li>
-        <li className="hover:text-primary">Talents</li>
+        <li className="hover:text-primary">
+          <Link to="/">Home</Link>
+        </li>
+        <li className="hover:text-primary">
+          <Link to="/works">Works</Link>
+        </li>
+        <li className="hover:text-primary">
+          <Link to="/jobs">Jobs</Link>
+        </li>
       </ul>
       <div className="hidden flex-1 justify-end gap-3 lg:flex">
         <Link to="/login">

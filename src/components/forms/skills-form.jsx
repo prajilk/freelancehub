@@ -3,11 +3,26 @@ import Select from "react-tailwindcss-select";
 import { skillsArray } from "../../lib/skills";
 import { DialogClose } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { useUpdatedSkills } from "../../api/skills";
+import LoadingButton from "../ui/loading-button";
+import { useDispatch } from "react-redux";
+import { updateSkills } from "../../redux/userSlice";
+import { toast } from "sonner";
 
 const SkillsForm = ({ oldSkills = null }) => {
   const [skills, setSkills] = useState(oldSkills);
+  const dispatch = useDispatch();
+
+  function onSuccess() {
+    dispatch(updateSkills(skills));
+    toast.success("Skills updated successfully");
+  }
+
+  const mutation = useUpdatedSkills(onSuccess);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    mutation.mutate(skills);
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -34,7 +49,9 @@ const SkillsForm = ({ oldSkills = null }) => {
             Cancel
           </Button>
         </DialogClose>
-        <Button type="submit">Save</Button>
+        <LoadingButton isLoading={mutation.isPending} type="submit">
+          Save
+        </LoadingButton>
       </div>
     </form>
   );

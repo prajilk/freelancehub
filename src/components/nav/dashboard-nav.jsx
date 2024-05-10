@@ -3,10 +3,14 @@ import { Bell, Mail } from "lucide-react";
 import { motion } from "framer-motion";
 import DashboardMobileMenu from "./dashboard-mobile-menu";
 import { Profile } from "./profile";
+import { useSelector } from "react-redux";
+import { Button } from "../ui/button";
 
 const DashboardNav = () => {
   const location = useLocation();
   const pathname = location.pathname;
+
+  const isAuthorized = useSelector((state) => state.user._id);
 
   return (
     <nav className="h-fit w-full bg-white text-muted-foreground">
@@ -19,20 +23,20 @@ const DashboardNav = () => {
         </Link>
         <ul className="hidden items-center gap-10 text-sm font-medium lg:flex [&>*]:cursor-pointer [&>*]:py-5">
           <li
-            className={`${pathname === "/dashboard" && "border-b-primary text-primary"} flex h-full items-center border-b-2 border-transparent hover:border-primary hover:text-primary`}
+            className={`${pathname === "/works" && "border-b-primary text-primary"} flex h-full items-center border-b-2 border-transparent hover:border-primary hover:text-primary`}
           >
-            <Link to={"/dashboard"}>Find Works</Link>
+            <Link to={"/works"}>Find Works</Link>
           </li>
           <li
-            className={`${pathname === "/dashboard/jobs" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
+            className={`${pathname === "/jobs" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
           >
-            <Link to={"/dashboard/jobs"}>Find Jobs</Link>
+            <Link to={"/jobs"}>Find Jobs</Link>
           </li>
-          <li
+          {/* <li
             className={`${pathname === "/dashboard/freelancers" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
           >
             <Link to={"/dashboard/freelancers"}>Find Freelancers</Link>
-          </li>
+          </li> */}
           <li
             className={`${pathname === "/dashboard/upload-proposals" && "border-b-primary text-primary"} border-b-2 border-transparent hover:border-primary hover:text-primary`}
           >
@@ -57,7 +61,24 @@ const DashboardNav = () => {
               className="absolute -right-0.5 top-0 size-2.5 rounded-full bg-red-500"
             ></motion.span>
           </div>
-          <Profile />
+          {isAuthorized ? (
+            <Profile />
+          ) : (
+            <div className="hidden space-x-1 lg:block">
+              <Link to="/register" className="text-sm font-semibold">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="hover:bg-zinc-200 hover:text-black"
+                >
+                  Register
+                </Button>
+              </Link>
+              <Link to="/login" className="text-sm font-semibold">
+                <Button size="sm">Login</Button>
+              </Link>
+            </div>
+          )}
         </div>
 
         <DashboardMobileMenu />

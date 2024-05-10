@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 
 const JOBS = [
@@ -5,7 +6,6 @@ const JOBS = [
     title: "Senior UI Designer",
     description:
       "We are looking for a talented and experienced UI Designer to join our team to develop a new social crowdfunding app.",
-    image: "./artistry.png",
     salaryFrom: 4000,
     salaryTo: 12000,
     jobType: "Remote work",
@@ -15,7 +15,6 @@ const JOBS = [
     title: "Website Developer",
     description:
       "We are seeking a talented web developer to join our team to create a engaging and effective company profile landing page.",
-    image: "./dexign.png",
     salaryFrom: 4000,
     salaryTo: 12000,
     jobType: "Remote work",
@@ -25,7 +24,6 @@ const JOBS = [
     title: "UX Copywriter",
     description:
       "We are seeking a talented UX Copywriter to join our team to create an engaging and effective food delivery product",
-    image: "./emblem.png",
     salaryFrom: 4000,
     salaryTo: 12000,
     jobType: "Remote work",
@@ -35,7 +33,6 @@ const JOBS = [
     title: "Senior Project Manager",
     description:
       "We are looking for a experienced Project Manager to join our team to take care all of incoming inquiries from many clients.",
-    image: "./grapherz.png",
     salaryFrom: 4000,
     salaryTo: 12000,
     jobType: "Remote work",
@@ -45,7 +42,6 @@ const JOBS = [
     title: "Web Developer",
     description:
       "We are seeking a versatile web developer to join our team to create an engaging and effective Split Bill Application for desktop and mobile.",
-    image: "./grapho.png",
     salaryFrom: 4000,
     salaryTo: 12000,
     jobType: "Remote work",
@@ -55,7 +51,6 @@ const JOBS = [
     title: "Digital Marketing",
     description:
       "We are seeking a talented Digital Marketing to boost our market and our value around social media, website and other digital platform.",
-    image: "./iconic.png",
     salaryFrom: 4000,
     salaryTo: 12000,
     jobType: "Remote work",
@@ -78,7 +73,9 @@ const Jobs = () => {
           ))}
         </div>
         <div className="flex justify-center py-10">
-          <Button>Load More Jobs</Button>
+          <Link to="/works">
+            <Button>Load More Jobs</Button>
+          </Link>
         </div>
       </div>
     </section>
@@ -89,7 +86,6 @@ export default Jobs;
 
 const JobCard = ({
   title,
-  image,
   jobType,
   salaryFrom,
   salaryTo,
@@ -98,7 +94,6 @@ const JobCard = ({
 }) => {
   return (
     <div className="flex w-full cursor-pointer flex-col items-start rounded-xl bg-white p-5 text-left shadow-md">
-      <img src={image} alt="" className="size-12" />
       <h4 className="mt-4 font-semibold">{title}</h4>
       <span className="text-sm text-muted-foreground">
         {jobType} • ${salaryFrom} - ${salaryTo}

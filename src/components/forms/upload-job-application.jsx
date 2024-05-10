@@ -23,6 +23,9 @@ import {
 import MultiSelect from "react-tailwindcss-select";
 import { skillsArray } from "../../lib/skills";
 import { useState } from "react";
+import { useCreateJob } from "../../api/job/create-job";
+import { toast } from "sonner";
+import LoadingButton from "../ui/loading-button";
 
 const uploadJobAppSchema = z.object({
   title: z.string().min(10, {
@@ -39,6 +42,8 @@ const uploadJobAppSchema = z.object({
 });
 
 const UploadJobApplicationForm = () => {
+  const [skills, setSkills] = useState(null);
+
   const form = useForm({
     resolver: zodResolver(uploadJobAppSchema),
     defaultValues: {
@@ -50,15 +55,28 @@ const UploadJobApplicationForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  function onSuccess(response) {
+    toast.success(response.message);
+    form.setValue("title", "");
+    form.setValue("description", "");
+    form.setValue("location", "");
+    form.setValue("company", "");
+    setSkills(null);
   }
 
-  const [skills, setSkills] = useState(null);
-  const [companyLogo, setCompanyLogo] = useState();
+  const mutation = useCreateJob(onSuccess);
+
+  // 2. Define a submit handler.
+  function onSubmit(values) {
+    if (!skills || skills.length < 2) {
+      return toast.error("Must select at least 2 skills");
+    }
+
+    mutation.mutate({
+      ...values,
+      skills,
+    });
+  }
 
   const handleSkillsChange = (value) => {
     setSkills(value);
@@ -136,32 +154,6 @@ const UploadJobApplicationForm = () => {
             </FormItem>
           )}
         />
-        <div className="grid gap-3 lg:grid-cols-2 lg:gap-0">
-          <div>
-            <FormLabel className="text-lg font-semibold">Logo</FormLabel>
-            <FormDescription>Upload a company logo</FormDescription>
-          </div>
-          <div>
-            <label htmlFor="company-logo">
-              <img
-                src={
-                  companyLogo
-                    ? URL.createObjectURL(companyLogo)
-                    : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLpHljl0iy2Ot-23PBrBhq4Dp0PBJBRj5vmvNZXpFHQw&s"
-                }
-                alt="Placeholder"
-                className="size-20 cursor-pointer rounded-full bg-zinc-200"
-              />
-              <input
-                type="file"
-                accept="image/x-png,image/gif,image/jpeg,image/webp"
-                className="hidden"
-                id="company-logo"
-                onChange={(e) => setCompanyLogo(e.target.files[0])}
-              />
-            </label>
-          </div>
-        </div>
         <FormField
           control={form.control}
           name="jobType"
@@ -231,7 +223,9 @@ const UploadJobApplicationForm = () => {
           )}
         />
         <div className="flex justify-end gap-2 pt-5">
-          <Button type="submit">Create</Button>
+          <LoadingButton isLoading={mutation.isPending} type="submit">
+            Create
+          </LoadingButton>
         </div>
       </form>
     </Form>

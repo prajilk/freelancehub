@@ -3,16 +3,27 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { LongText } from "./ui/long-text";
 import { Link } from "react-router-dom";
+import { formatTimeAgo } from "../lib/utils";
+import { useSelector } from "react-redux";
 
-const WorkCard = ({ title, skills, country, experience, applicants }) => {
+const WorkCard = ({ work }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const user = useSelector((state) => state.user._id);
+
   return (
     <div className="w-full rounded-lg bg-white p-7 shadow">
       <div className="flex items-center gap-3">
         <div>
-          <h3 className="font-semibold">{title}</h3>
-          <span className="text-xs text-muted-foreground">
-            Hourly • Budget: $20 - $40
+          <h3 className="flex items-center gap-3 font-semibold">
+            {work?.title}
+            {user === work?.userId && (
+              <span className="rounded-full bg-primary px-2 py-0.5 text-[.6rem] text-white">
+                My work
+              </span>
+            )}
+          </h3>
+          <span className="text-xs capitalize text-muted-foreground">
+            {work?.payment} • Budget: ${work?.paymentMin} - ${work?.paymentMax}
           </span>
         </div>
         <Button
@@ -24,22 +35,17 @@ const WorkCard = ({ title, skills, country, experience, applicants }) => {
           <Bookmark className={`${isBookmarked && "fill-primary"}`} />
         </Button>
       </div>
-      <LongText>
-        We are looking for a talented and experienced developer to join our team
-        to develop a new crowdfunding app. As a Crowdfunding App Developer, you
-        will be responsible for designing, developing and implementing the app,
-        ensuring it is user-friendly, functional and secure.
-      </LongText>
+      <LongText>{work?.description}</LongText>
 
       <div className="mb-5 mt-3 flex gap-5">
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1 text-xs capitalize text-muted-foreground">
           <MapPin size={15} />
-          <b>{country}</b>
+          <b>{work?.location}</b>
         </div>
-        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1 text-xs capitalize text-muted-foreground">
           <User size={15} />
           <span>
-            Looking for: <b>{experience}</b>
+            Looking for: <b>{work?.experience}</b>
           </span>
         </div>
       </div>
@@ -47,21 +53,25 @@ const WorkCard = ({ title, skills, country, experience, applicants }) => {
       <div className="flex flex-wrap items-center gap-5 text-xs">
         <div className="relative w-full after:absolute after:right-0 after:top-0 after:h-full after:w-10 after:bg-gradient-to-r after:from-transparent after:to-white">
           <div className="hide-scrollbar flex gap-2 overflow-scroll">
-            {skills?.map((skill, i) => (
+            {work?.skills.map((skill, i) => (
               <span
                 className="flex-shrink-0 rounded-full bg-zinc-200 px-2 py-1.5"
                 key={i}
               >
-                {skill}
+                {skill.label}
               </span>
             ))}
           </div>
         </div>
         <div className="flex w-full flex-wrap items-center justify-between text-muted-foreground">
-          <span className="flex-shrink-0 text-sm">{applicants} Applicants</span>
+          <span className="flex-shrink-0 text-sm">
+            {work?.totalApplicants} Applicants
+          </span>
           <div className="flex w-full items-center justify-between gap-4 md:w-fit md:justify-start">
-            <span className="flex-shrink-0">Posted 5 mins ago</span>
-            <Link to="/dashboard/works/workid">
+            <span className="flex-shrink-0">
+              Posted {formatTimeAgo(work?.createdAt)}
+            </span>
+            <Link to={`/works/${work?._id}`}>
               <Button size="sm" className="text-sm">
                 View
               </Button>

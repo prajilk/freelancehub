@@ -1,10 +1,4 @@
-import {
-  Bookmark,
-  BriefcaseBusiness,
-  LogOut,
-  Settings,
-  User,
-} from "lucide-react";
+import { Bookmark, BriefcaseBusiness, LogOut, User } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -16,15 +10,28 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export function Profile() {
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="hidden outline-none md:block">
         <Avatar>
-          <AvatarImage src="https://i.pravatar.cc/150?img=32" alt="Profile" />
-          <AvatarFallback>P</AvatarFallback>
+          <AvatarImage
+            src={user.image}
+            alt="Profile"
+            className="object-cover"
+          />
+          <AvatarFallback>{user.firstName[0]}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -38,8 +45,13 @@ export function Profile() {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Bookmark className="mr-2 h-4 w-4" />
-            <span>Bookmarks</span>
+            <Link
+              to="/dashboard/bookmarks"
+              className="flex w-full items-center"
+            >
+              <Bookmark className="mr-2 h-4 w-4" />
+              <span>Bookmarks</span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BriefcaseBusiness className="mr-2 h-4 w-4" />
@@ -47,13 +59,16 @@ export function Profile() {
               My history
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="focus:bg-destructive/20 focus:text-destructive">
+        <DropdownMenuItem
+          className="focus:bg-destructive/20 focus:text-destructive"
+          onClick={handleLogout}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

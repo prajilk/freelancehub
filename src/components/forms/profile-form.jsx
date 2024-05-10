@@ -15,6 +15,20 @@ import { BsCurrencyDollar } from "react-icons/bs";
 import { DrawerClose } from "../ui/drawer";
 import { BriefcaseBusiness, MapPin } from "lucide-react";
 import SocialsReorder from "../profile/socials-reorder";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { country_list } from "../../lib/countries";
+import { toast } from "sonner";
+import { updateProfile } from "../../redux/userSlice";
+import LoadingButton from "../ui/loading-button";
+import { useUpdateProfile } from "../../api/profile";
 
 const profileSchema = z.object({
   firstName: z.string().min(3, {
@@ -33,9 +47,7 @@ const profileSchema = z.object({
     }),
   experience: z.string(),
   hourly: z.string(),
-  linkedin: z.string(),
-  x: z.string(),
-  location: z
+  country: z
     .string()
     .min(3, {
       message: "Location must be at least 3 characters.",
@@ -45,33 +57,47 @@ const profileSchema = z.object({
     }),
 });
 
-export function ProfileForm({
-  setMainSocials,
-  firstName = "",
-  lastName = "",
-  role = "",
-  experience = "",
-  hourly = "",
-  location = "",
-}) {
+export function ProfileForm() {
+  const profileData = useSelector((state) => state.user);
+
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName,
-      lastName,
-      role,
-      experience,
-      hourly,
-      location,
+      firstName: profileData?.firstName || "",
+      lastName: profileData?.lastName || "",
+      role: profileData?.profile.role || "",
+      experience: profileData?.profile.experience || "",
+      hourly: profileData?.profile.hourly.toString() || "",
+      country: profileData?.country || "",
     },
   });
 
+  const dispatch = useDispatch();
+
+  function onSuccess() {
+    toast.success("Profile updated successfully");
+    dispatch(
+      updateProfile({
+        firstName: form.getValues().firstName,
+        lastName: form.getValues().lastName,
+        role: form.getValues().role,
+        experience: form.getValues().experience,
+        hourly: form.getValues().hourly,
+        country: form.getValues().country,
+      }),
+    );
+  }
+
+  const mutation = useUpdateProfile(onSuccess);
+
   // 2. Define a submit handler.
   function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    mutation.mutate({
+      ...values,
+      topFourSocials: profileData.profile.topFourSocials,
+      socials: profileData.socials,
+    });
   }
 
   return (
@@ -173,17 +199,31 @@ export function ProfileForm({
         />
         <FormField
           control={form.control}
-          name="location"
+          name="country"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg font-semibold">Location</FormLabel>
+              <FormLabel className="text-lg font-semibold">Country</FormLabel>
               <FormControl>
-                <Input
-                  startIcon={<MapPin size={15} />}
-                  placeholder="Enter your location"
-                  {...field}
-                  className="border border-zinc-300 bg-white focus:border-zinc-500"
-                />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="border border-zinc-300 bg-white focus:border-zinc-500">
+                    <div className="flex items-center gap-1 font-medium text-muted-foreground">
+                      <MapPin size={15} />
+                      <SelectValue />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {country_list.map((country, i) => (
+                        <SelectItem value={country} key={i}>
+                          {country}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -191,7 +231,7 @@ export function ProfileForm({
         />
         <div className="space-y-3 pt-7">
           <h1 className="text-2xl font-semibold">Socials</h1>
-          <SocialsReorder setMainSocials={setMainSocials} />
+          <SocialsReorder />
         </div>
         <div className="flex justify-end gap-2 py-5">
           <DrawerClose asChild>
@@ -203,7 +243,9 @@ export function ProfileForm({
               Cancel
             </Button>
           </DrawerClose>
-          <Button type="submit">Save</Button>
+          <LoadingButton isLoading={mutation.isPending} type="submit">
+            Save
+          </LoadingButton>
         </div>
       </form>
     </Form>

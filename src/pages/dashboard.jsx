@@ -1,9 +1,13 @@
+import { useWorks } from "../api/work/get-works";
 import WorkFilter from "../components/filter/work-filter";
 import DashboardNav from "../components/nav/dashboard-nav";
 import Search from "../components/search";
+import WorkJobCardSkeletons from "../components/skeletons/work-card";
 import WorkCard from "../components/work-card";
 
 const Dashboard = () => {
+  const { data: works, isLoading } = useWorks();
+
   return (
     <>
       <DashboardNav />
@@ -13,20 +17,14 @@ const Dashboard = () => {
         </div>
         <div className="col-span-4 space-y-5 lg:col-span-3">
           <Search searchFor="work" />
-          <WorkCard
-            title="Building end-to-end crowdfunding application"
-            country="India"
-            experience="Expert"
-            applicants={14}
-            skills={["Kotlin", "IOS Developer", "Software Engineer"]}
-          />
-          <WorkCard
-            title="UX Copywriter for company profile landing page"
-            country="USA"
-            experience="Intermediate"
-            applicants={20}
-            skills={["UX Copywriter", "UX Writer", "Copywriter"]}
-          />
+          {isLoading ? (
+            <>
+              <WorkJobCardSkeletons />
+              <WorkJobCardSkeletons />
+            </>
+          ) : (
+            works && works.map((work, i) => <WorkCard key={i} work={work} />)
+          )}
         </div>
       </div>
     </>

@@ -24,6 +24,9 @@ import MultiSelect from "react-tailwindcss-select";
 import { skillsArray } from "../../lib/skills";
 import { useState } from "react";
 import { BsCurrencyDollar } from "react-icons/bs";
+import { toast } from "sonner";
+import { useCreateWork } from "../../api/work/create-work";
+import LoadingButton from "../ui/loading-button";
 
 const uploadWorkProposalSchema = z.object({
   title: z.string().min(10, {
@@ -35,30 +38,68 @@ const uploadWorkProposalSchema = z.object({
   location: z.string().min(3, {
     message: "Location must be at least 3 characters.",
   }),
-  paymentType: z.enum(["hourly", "fixed"]),
-  experienceType: z.enum(["entry-level", "intermediate", "expert"]),
+  payment: z.enum(["hourly", "fixed"]),
+  experience: z.enum(["entry-level", "intermediate", "expert"]),
 });
 
 const UploadWorkProposalForm = () => {
+  const [skills, setSkills] = useState(null);
+  const [paymentMinMax, setPaymentMinMax] = useState({
+    min: 0,
+    max: 0,
+  });
+
   const form = useForm({
     resolver: zodResolver(uploadWorkProposalSchema),
     defaultValues: {
       title: "",
       description: "",
       location: "",
-      paymentType: "hourly",
-      experienceType: "intermediate",
+      payment: "hourly",
+      experience: "intermediate",
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  function onSuccess(response) {
+    toast.success(response.message);
+    form.setValue("title", "");
+    form.setValue("description", "");
+    form.setValue("location", "");
+    setPaymentMinMax({
+      min: 0,
+      max: 0,
+    });
+    setSkills(null);
   }
 
-  const [skills, setSkills] = useState(null);
+  const mutation = useCreateWork(onSuccess);
+
+  // 2. Define a submit handler.
+  function onSubmit(values) {
+    if (
+      isNaN(Number(paymentMinMax.min)) ||
+      isNaN(Number(paymentMinMax.max)) ||
+      Number(paymentMinMax.min) < 0 ||
+      Number(paymentMinMax.max) <= 0
+    ) {
+      return toast.error("Invalid payment min or max!");
+    }
+    if (Number(paymentMinMax.min) > Number(paymentMinMax.max)) {
+      return toast.error(
+        "The minimum payment amount cannot exceed the maximum.",
+      );
+    }
+    if (!skills || skills.length < 2) {
+      return toast.error("Must select at least 2 skills");
+    }
+
+    mutation.mutate({
+      ...values,
+      paymentMin: paymentMinMax.min,
+      paymentMax: paymentMinMax.max,
+      skills,
+    });
+  }
 
   const handleSkillsChange = (value) => {
     setSkills(value);
@@ -117,7 +158,7 @@ const UploadWorkProposalForm = () => {
 
         <FormField
           control={form.control}
-          name="paymentType"
+          name="payment"
           render={({ field }) => (
             <FormItem className="grid lg:grid-cols-2">
               <div>
@@ -145,11 +186,25 @@ const UploadWorkProposalForm = () => {
                   <Input
                     placeholder="Min"
                     startIcon={<BsCurrencyDollar />}
+                    value={paymentMinMax.min}
+                    onChange={(e) =>
+                      setPaymentMinMax((prev) => ({
+                        ...prev,
+                        min: e.target.value,
+                      }))
+                    }
                     className="bg-white"
                   />
                   <Input
                     placeholder="Max"
                     startIcon={<BsCurrencyDollar />}
+                    value={paymentMinMax.max}
+                    onChange={(e) =>
+                      setPaymentMinMax((prev) => ({
+                        ...prev,
+                        max: e.target.value,
+                      }))
+                    }
                     className="bg-white"
                   />
                 </div>
@@ -160,7 +215,7 @@ const UploadWorkProposalForm = () => {
         />
         <FormField
           control={form.control}
-          name="experienceType"
+          name="experience"
           render={({ field }) => (
             <FormItem className="grid lg:grid-cols-2">
               <div>
@@ -233,7 +288,9 @@ const UploadWorkProposalForm = () => {
         </div>
 
         <div className="flex justify-end gap-2 pt-5">
-          <Button type="submit">Create</Button>
+          <LoadingButton isLoading={mutation.isPending} type="submit">
+            Create
+          </LoadingButton>
         </div>
       </form>
     </Form>

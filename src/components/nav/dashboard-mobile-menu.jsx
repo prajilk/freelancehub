@@ -1,11 +1,20 @@
 import { LogOut, Menu } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const DashboardMobileMenu = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const pathname = location.pathname;
+
+  const isAuthorized = useSelector((state) => state.user._id);
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
 
   return (
     <div className="ms-2 lg:hidden">
@@ -27,26 +36,26 @@ const DashboardMobileMenu = () => {
             </div>
             <ul className="mt-10 space-y-5 ps-3 [&>*]:cursor-pointer">
               <li
-                className={`${pathname === "/dashboard" && "text-primary"} flex hover:text-primary`}
+                className={`${pathname === "/works" && "text-primary"} flex hover:text-primary`}
               >
-                <Link to={"/dashboard"} className="w-full">
+                <Link to={"/works"} className="w-full">
                   Find Works
                 </Link>
               </li>
               <li
-                className={`${pathname === "/dashboard/jobs" && "text-primary"} flex hover:text-primary`}
+                className={`${pathname === "/jobs" && "text-primary"} flex hover:text-primary`}
               >
-                <Link to={"/dashboard/jobs"} className="w-full">
+                <Link to={"/jobs"} className="w-full">
                   Find Jobs
                 </Link>
               </li>
-              <li
+              {/* <li
                 className={`${pathname === "/dashboard/freelancers" && "text-primary"} flex hover:text-primary`}
               >
                 <Link to={"/dashboard/freelancers"} className="w-full">
                   Find Freelancers
                 </Link>
-              </li>
+              </li> */}
               <li
                 className={`${pathname === "/dashboard/upload-proposals" && "text-primary"} flex hover:text-primary`}
               >
@@ -55,22 +64,48 @@ const DashboardMobileMenu = () => {
                 </Link>
               </li>
               <hr />
-              <li className="flex hover:text-primary">
-                <Link to={"/dashboard/profile"} className="w-full">
-                  Profile
-                </Link>
-              </li>
-              <li className="flex hover:text-primary">Bookmarks</li>
-              <li className="flex hover:text-primary">
-                <Link to="/dashboard/my-history" className="w-full">
-                  My history
-                </Link>
-              </li>
-              <li className="flex hover:text-primary">Settings</li>
-              <hr />
-              <li className="flex items-center text-destructive">
-                <LogOut className="mr-2 h-4 w-4" /> Log out
-              </li>
+              {isAuthorized ? (
+                <li className="flex hover:text-primary">
+                  <Link to={"/dashboard/profile"} className="w-full">
+                    Profile
+                  </Link>
+                </li>
+              ) : (
+                <>
+                  <li className="flex hover:text-primary">
+                    <Link to={"/login"} className="w-full">
+                      Login
+                    </Link>
+                  </li>
+                  <li className="flex hover:text-primary">
+                    <Link to={"/register"} className="w-full">
+                      Register
+                    </Link>
+                  </li>
+                </>
+              )}
+              {isAuthorized && (
+                <>
+                  <li className="flex hover:text-primary">
+                    <Link to="/dashboard/bookmarks" className="w-full">
+                      Bookmarks
+                    </Link>
+                  </li>
+                  <li className="flex hover:text-primary">
+                    <Link to="/dashboard/my-history" className="w-full">
+                      My history
+                    </Link>
+                  </li>
+                  <hr />
+                  <li
+                    className="flex items-center text-destructive"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" /> Log out
+                  </li>
+                </>
+              )}
+              {/* <li className="flex hover:text-primary">Settings</li> */}
             </ul>
           </div>
         </SheetContent>

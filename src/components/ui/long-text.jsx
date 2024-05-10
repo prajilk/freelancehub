@@ -9,10 +9,10 @@ export const LongText = ({
   className = "",
 }) => {
   const [isLong, setIsLong] = useState(
-    children.length > maxWords ? true : false,
+    children?.length > maxWords ? true : false,
   );
 
-  const isLongText = children.length > maxWords;
+  const isLongText = children?.length > maxWords;
 
   return (
     <div className={cn(`relative mt-5 ${isLongText && "pb-5"}`, className)}>

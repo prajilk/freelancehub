@@ -5,8 +5,37 @@ import Portfolio from "../components/profile/portfolio";
 import Skills from "../components/profile/skills";
 import Languages from "../components/profile/languages";
 import { Pencil, Plus, Trash2 } from "lucide-react";
+import { useProfile } from "../api/get-profile";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { setUser } from "../redux/userSlice";
+import PageLoading from "../components/common/page-loading";
+import { useLocation } from "react-router-dom";
+import { disableViewMode, setToViewMode } from "../redux/profileViewModeSlice";
+import Education from "../components/profile/education";
 
 const Profile = () => {
+  const userId = useLocation().pathname.split("/").at(-1);
+  const basePath = useLocation().pathname.split("/")[1];
+
+  const { data: profile, isLoading } = useProfile(userId);
+
+  const dispatch = useDispatch();
+
+  if (basePath === "user") {
+    dispatch(setToViewMode());
+  } else {
+    dispatch(disableViewMode());
+  }
+
+  useEffect(() => {
+    profile && dispatch(setUser(profile));
+  }, [profile]);
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
   return (
     <>
       <DashboardNav />
@@ -19,35 +48,7 @@ const Profile = () => {
             <hr className="my-7" />
             <Languages />
             <hr className="my-7" />
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-bold">Education</h1>
-              <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-                <Plus size={20} />
-              </button>
-            </div>
-            <ul className="mt-3">
-              <li>
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">
-                    University of Chicago
-                  </h3>
-                  <div className="flex gap-1">
-                    <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-                      <Pencil size={20} />
-                    </button>
-                    <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-                <h4 className="text-sm text-muted-foreground">
-                  Bachelor's degree, User Experience
-                </h4>
-                <span className="text-sm text-muted-foreground">
-                  2015 - 2018
-                </span>
-              </li>
-            </ul>
+            <Education />
           </div>
 
           {/* Right section */}

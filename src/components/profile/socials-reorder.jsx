@@ -1,11 +1,10 @@
-import {
-  Reorder,
-  animate,
-  useDragControls,
-  useMotionValue,
-} from "framer-motion";
+import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import { Grip } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Input } from "../ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import { updateSocials, updateTopSocials } from "../../redux/userSlice";
+import { socialsArray, useRaisedShadow, useSocialLabel } from "../../lib/utils";
 import { CiGlobe } from "react-icons/ci";
 import {
   FaDribbble,
@@ -14,22 +13,17 @@ import {
   FaStackOverflow,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { Input } from "../ui/input";
 
-const socialsArray = [
-  "linkeIn",
-  "github",
-  "dribbble",
-  "stackOverflow",
-  "x",
-  "website",
-];
+const SocialsReorder = () => {
+  const topSocials = useSelector((state) => state.user.profile.topFourSocials);
 
-const SocialsReorder = ({ setMainSocials }) => {
-  const [socials, setSocials] = useState(socialsArray);
+  const [socials, setSocials] = useState([
+    ...new Set([...topSocials, ...socialsArray]),
+  ]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setMainSocials(socials.slice(0, 4));
+    dispatch(updateTopSocials(socials));
   }, [socials]);
 
   return (
@@ -47,14 +41,8 @@ const SocialInput = ({ social }) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
   const dragControls = useDragControls();
-  const [socialLinks, setSocialLinks] = useState({
-    linkeIn: "",
-    github: "",
-    dribbble: "",
-    stackOverflow: "",
-    x: "",
-    website: "",
-  });
+  const socials = useSelector((state) => state.user.socials);
+  const dispatch = useDispatch();
 
   return (
     <Reorder.Item
@@ -72,43 +60,16 @@ const SocialInput = ({ social }) => {
       <Input
         startIcon={useIcon(social)}
         placeholder={`Enter your ${useSocialLabel(social)} URL`}
-        value={socialLinks[social]}
-        onChange={(e) =>
-          setSocialLinks((prev) => ({ ...prev, [social]: e.target.value }))
-        }
+        value={socials[social]}
+        onChange={(e) => dispatch(updateSocials({ [social]: e.target.value }))}
         className="border border-zinc-300 bg-white focus:border-zinc-500"
       />
     </Reorder.Item>
   );
 };
 
-export function useRaisedShadow(value) {
-  const inactiveShadow = "0px 0px 0px rgba(0,0,0,0.8)";
-  const boxShadow = useMotionValue(inactiveShadow);
-
-  useEffect(() => {
-    let isActive = false;
-    value.on("change", (latest) => {
-      const wasActive = isActive;
-      if (latest !== 0) {
-        isActive = true;
-        if (isActive !== wasActive) {
-          animate(boxShadow, "5px 5px 10px rgba(0,0,0,0.3)");
-        }
-      } else {
-        isActive = false;
-        if (isActive !== wasActive) {
-          animate(boxShadow, inactiveShadow);
-        }
-      }
-    });
-  }, [value, boxShadow]);
-
-  return boxShadow;
-}
-
-function useIcon(social) {
-  if (social === "linkeIn") {
+export function useIcon(social) {
+  if (social === "linkedIn") {
     return <FaLinkedin />;
   } else if (social === "github") {
     return <FaGithub />;
@@ -120,21 +81,5 @@ function useIcon(social) {
     return <FaStackOverflow />;
   } else if (social === "website") {
     return <CiGlobe />;
-  }
-}
-
-function useSocialLabel(social) {
-  if (social === "linkeIn") {
-    return "LinkedIn";
-  } else if (social === "github") {
-    return "Github";
-  } else if (social === "dribbble") {
-    return "Dribbble";
-  } else if (social === "x") {
-    return "X";
-  } else if (social === "stackOverflow") {
-    return "Stack Overflow";
-  } else if (social === "website") {
-    return "Website";
   }
 }
