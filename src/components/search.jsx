@@ -6,15 +6,16 @@ import { Search as SearchIcon } from "lucide-react";
 import { updateSearchQuery } from "../redux/searchQuerySlice";
 import { useSearchWorks } from "../api/work/search-works";
 import { useSearchJobs } from "../api/job/search-jobs";
+import { setWorks } from "../redux/worksSlice";
 
-const Search = ({ searchFor, setState, setLoading }) => {
+const Search = ({ searchFor, setLoading }) => {
   const filter = useSelector((state) => state.filter);
   const search = useSelector((state) => state.searchQuery);
   const dispatch = useDispatch();
 
   const mutation = searchFor === "work" ? useSearchWorks() : useSearchJobs();
 
-  if (mutation.data) setState(mutation.data);
+  if (mutation.data) dispatch(setWorks(mutation.data));
   setLoading(mutation.isPending);
 
   function handleApplyFilter() {
@@ -40,7 +41,7 @@ const Search = ({ searchFor, setState, setLoading }) => {
           value={search}
           onChange={(e) => dispatch(updateSearchQuery(e.target.value))}
         />
-        <FilterDrawer />
+        <FilterDrawer forWork={searchFor === "work"} setLoading={setLoading} />
         <Button
           onClick={handleApplyFilter}
           className="hidden bg-white font-semibold text-primary hover:bg-white/90 lg:block"

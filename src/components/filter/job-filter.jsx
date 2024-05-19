@@ -5,19 +5,21 @@ import JobMode from "./job-mode";
 import Location from "./location";
 import { clearFilter } from "../../redux/filterSlice";
 import { useSearchJobs } from "../../api/job/search-jobs";
+import { setJobs } from "../../redux/jobsSlice";
 
-const JobFilter = ({ setAllJobs, setSearchLoading }) => {
+const JobFilter = ({ setSearchLoading, closeDrawer }) => {
   const filter = useSelector((state) => state.filter);
   const search = useSelector((state) => state.searchQuery);
   const dispatch = useDispatch();
 
   const mutation = useSearchJobs();
 
-  if (mutation.data) setAllJobs(mutation.data);
+  if (mutation.data) dispatch(setJobs(mutation.data));
   setSearchLoading(mutation.isPending);
 
   function handleApplyFilter() {
     mutation.mutate({ filter, search });
+    closeDrawer && closeDrawer();
   }
 
   return (

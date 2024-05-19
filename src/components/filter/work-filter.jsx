@@ -6,19 +6,21 @@ import WorkMode from "./work-mode";
 import Location from "./location";
 import { clearFilter } from "../../redux/filterSlice";
 import { useSearchWorks } from "../../api/work/search-works";
+import { setWorks } from "../../redux/worksSlice";
 
-const WorkFilter = ({ setAllWorks, setSearchLoading }) => {
+const WorkFilter = ({ setSearchLoading, closeDrawer }) => {
   const filter = useSelector((state) => state.filter);
   const search = useSelector((state) => state.searchQuery);
   const dispatch = useDispatch();
 
   const mutation = useSearchWorks();
 
-  if (mutation.data) setAllWorks(mutation.data);
+  if (mutation.data) dispatch(setWorks(mutation.data));
   setSearchLoading(mutation.isPending);
 
   function handleApplyFilter() {
     mutation.mutate({ filter, search });
+    closeDrawer && closeDrawer();
   }
   return (
     <div className="h-fit rounded-lg bg-white p-4 shadow">

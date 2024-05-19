@@ -1,11 +1,14 @@
 import { Filter as FilterIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerTrigger } from "../ui/drawer";
 import { Button } from "../ui/button";
-import Filter from "../filter/work-filter";
+import WorkFilter from "../filter/work-filter";
+import JobFilter from "../filter/job-filter";
+import { useState } from "react";
 
-const FilterDrawer = () => {
+const FilterDrawer = ({ setLoading, forWork }) => {
+  const [open, setOpen] = useState(false);
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild className="lg:hidden">
         <Button
           className="gap-2 bg-white font-semibold text-primary hover:bg-white/90"
@@ -15,7 +18,17 @@ const FilterDrawer = () => {
         </Button>
       </DrawerTrigger>
       <DrawerContent>
-        <Filter />
+        {forWork ? (
+          <WorkFilter
+            setSearchLoading={setLoading}
+            closeDrawer={() => open && setOpen(false)}
+          />
+        ) : (
+          <JobFilter
+            setSearchLoading={setLoading}
+            closeDrawer={() => open && setOpen(false)}
+          />
+        )}
       </DrawerContent>
     </Drawer>
   );

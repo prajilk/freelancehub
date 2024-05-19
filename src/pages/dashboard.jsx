@@ -9,10 +9,15 @@ import NoData from "../components/no-data";
 import { useBookmarks } from "../api/bookmarks";
 import { Button } from "../components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { setWorks } from "../redux/worksSlice";
 
 const Dashboard = () => {
-  const [allWorks, setAllWorks] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
+
+  const allWorks = useSelector((state) => state.works);
+  const dispatch = useDispatch();
+
   const {
     data: works,
     isLoading,
@@ -22,7 +27,7 @@ const Dashboard = () => {
   const { data: bookmarks } = useBookmarks();
 
   useEffect(() => {
-    setAllWorks(works?.pages.flat());
+    dispatch(setWorks(works?.pages.flat()));
   }, [works]);
 
   return (
@@ -30,17 +35,10 @@ const Dashboard = () => {
       <DashboardNav />
       <div className="container-lg my-10 grid grid-cols-4 gap-3">
         <div className="hidden lg:block">
-          <WorkFilter
-            setAllWorks={setAllWorks}
-            setSearchLoading={setSearchLoading}
-          />
+          <WorkFilter setSearchLoading={setSearchLoading} />
         </div>
         <div className="col-span-4 space-y-5 lg:col-span-3">
-          <Search
-            searchFor="work"
-            setLoading={setSearchLoading}
-            setState={setAllWorks}
-          />
+          <Search searchFor="work" setLoading={setSearchLoading} />
           {isLoading || searchLoading ? (
             <>
               <WorkJobCardSkeletons />
