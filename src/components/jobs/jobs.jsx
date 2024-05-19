@@ -60,7 +60,7 @@ const JobCard = ({ title, jobType, description, skills, location }) => {
         {jobType} • {location}
       </span>
       <p className="mt-5 text-sm text-muted-foreground">
-        {description.slice(0, 130)}...
+        {description?.slice(0, 130)}...
       </p>
       <div className="mt-5 flex flex-wrap gap-3 whitespace-nowrap text-xs text-muted-foreground">
         {skills?.slice(0, 2).map((skill, i) => (
