@@ -15,11 +15,7 @@ const AddPortfolioImage = ({ imageState, setImageState }) => {
         {imageState.length > 0 &&
           imageState.map((image, i) => (
             <div key={i} className="relative">
-              <img
-                src={URL.createObjectURL(image)}
-                alt="Project image"
-                className="w-full"
-              />
+              <img src={image} alt="Project image" className="w-full" />
               <Button
                 size="icon"
                 className="absolute right-0 top-0 z-10 m-3 rounded-full bg-white text-black hover:bg-white/60"
@@ -45,9 +41,16 @@ const AddPortfolioImage = ({ imageState, setImageState }) => {
           className="hidden"
           accept="image/x-png,image/gif,image/jpeg,image/webp"
           id="image"
-          onChange={(e) =>
-            setImageState((prev) => [...prev, e.target.files[0]])
-          }
+          onChange={(e) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+              const binaryStr = reader.result;
+              if (typeof binaryStr === "string")
+                setImageState((prev) => [...prev, binaryStr]);
+            };
+            reader.readAsDataURL(e.target.files[0]);
+          }}
         />
         <TooltipProvider>
           <Tooltip>

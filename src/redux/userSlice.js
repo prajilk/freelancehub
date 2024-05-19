@@ -16,7 +16,8 @@ const userSlice = createSlice({
             about: "",
             experience: "",
             hourly: 0,
-            language: {},
+            languages: [],
+            education: [],
             lookingForWork: false,
             role: ""
         },
@@ -65,6 +66,21 @@ const userSlice = createSlice({
         updateLookingForWork: (state, action) => {
             return { ...state, profile: { ...state.profile, lookingForWork: action.payload } }
         },
+        updateLanguage: (state, action) => {
+            return { ...state, profile: { ...state.profile, languages: [...state.profile.languages, action.payload] } }
+        },
+        editLanguages: (state, action) => {
+            return { ...state, profile: { ...state.profile, languages: action.payload } }
+        },
+        updateEducation: (state, action) => {
+            return { ...state, profile: { ...state.profile, education: [action.payload, ...state.profile.education] } }
+        },
+        deleteEducation: (state, action) => {
+            return { ...state, profile: { ...state.profile, education: state.profile.education.filter(edu => edu._id !== action.payload) } }
+        },
+        editEducation: (state, action) => {
+            return { ...state, profile: { ...state.profile, education: state.profile.education.map((edu) => edu._id === action.payload._id ? action.payload : edu) } }
+        }
     }
 })
 
@@ -76,6 +92,11 @@ export const {
     updateSkills,
     updateSocials,
     updateLookingForWork,
-    updateImage
+    updateImage,
+    updateLanguage,
+    editLanguages,
+    updateEducation,
+    deleteEducation,
+    editEducation
 } = userSlice.actions
 export default userSlice.reducer;

@@ -16,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import LoadingButton from "../ui/loading-button";
 import { useLogin } from "../../api/login";
+import { Button } from "../ui/button";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -56,6 +57,10 @@ const LoginForm = () => {
     } else {
       toast.error("Invalid data format");
     }
+  }
+
+  function loginDemoUser() {
+    onSubmit({ email: "demouser@mail.com", password: "12345678" });
   }
 
   return (
@@ -111,6 +116,15 @@ const LoginForm = () => {
         >
           Log in
         </LoadingButton>
+        <Button
+          disabled={mutation.isPending}
+          className="w-full border-primary text-primary hover:bg-primary/10 hover:text-primary"
+          variant="outline"
+          onClick={loginDemoUser}
+          type="button"
+        >
+          Log in as Demo user
+        </Button>
         <div>
           <span className="text-sm text-muted-foreground">
             Don't have an account?{" "}

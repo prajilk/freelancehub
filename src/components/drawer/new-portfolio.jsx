@@ -7,10 +7,12 @@ import {
   DrawerTrigger,
 } from "../ui/drawer";
 import { NewPortfolioForm } from "../forms/new-portfolio";
+import { useState } from "react";
 
 const NewPortfolioDrawer = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
           <Plus size={20} />
@@ -26,7 +28,7 @@ const NewPortfolioDrawer = () => {
           </DrawerClose>
         </div>
         <div className="hide-scrollbar lg:show-scrollbar lg:scrollbar-thin mt-7 overflow-y-scroll px-3">
-          <NewPortfolioForm />
+          <NewPortfolioForm closeDrawer={() => setOpen(false)} />
         </div>
       </DrawerContent>
     </Drawer>

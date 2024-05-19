@@ -1,38 +1,43 @@
-import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useSelector } from "react-redux";
+import EducationModal from "../modals/education";
+import DeleteEducation from "../modals/delete-education";
 
 const Education = () => {
   const viewMode = useSelector((state) => state.profileViewMode);
+  const educationData = useSelector((state) => state.user.profile.education);
+
   return (
     <>
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">Education</h1>
-        {!viewMode && (
-          <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-            <Plus size={20} />
-          </button>
-        )}
+        {!viewMode && <EducationModal />}
       </div>
       <ul className="mt-3">
-        <li>
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">University of Chicago</h3>
-            {!viewMode && (
-              <div className="flex gap-1">
-                <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-                  <Pencil size={20} />
-                </button>
-                <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-                  <Trash2 size={18} />
-                </button>
+        {educationData?.length > 0 ? (
+          educationData?.map((education, i) => (
+            <li key={i}>
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">{education.school}</h3>
+                {!viewMode && (
+                  <div className="flex gap-1">
+                    <EducationModal isEdit={true} educationData={education} />
+                    <DeleteEducation educationId={education._id} />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <h4 className="text-sm text-muted-foreground">
-            Bachelor's degree, User Experience
-          </h4>
-          <span className="text-sm text-muted-foreground">2015 - 2018</span>
-        </li>
+              <h4 className="text-sm text-muted-foreground">
+                {education.degree}
+              </h4>
+              <span className="text-sm text-muted-foreground">
+                {education.startYear} - {education.endYear}
+              </span>
+            </li>
+          ))
+        ) : (
+          <span className="text-sm text-muted-foreground">
+            Education is not added!
+          </span>
+        )}
       </ul>
     </>
   );

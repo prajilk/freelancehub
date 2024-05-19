@@ -10,10 +10,18 @@ import {
 } from "./ui/select";
 import { MapPin } from "lucide-react";
 import { country_list } from "../lib/countries";
+import { useDispatch, useSelector } from "react-redux";
+import { updateLocation } from "../redux/filterSlice";
 
 export function SelectLocations() {
+  const location = useSelector((state) => state.filter.location);
+  const dispatch = useDispatch();
+
   return (
-    <Select>
+    <Select
+      defaultValue={location}
+      onValueChange={(value) => dispatch(updateLocation(value))}
+    >
       <SelectTrigger className="w-full">
         <div className="flex items-center gap-1 font-medium text-muted-foreground">
           <MapPin size={15} />

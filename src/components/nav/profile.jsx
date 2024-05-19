@@ -24,7 +24,7 @@ export function Profile() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="hidden outline-none md:block">
+      <DropdownMenuTrigger className="hidden p-1 outline-none md:block">
         <Avatar>
           <AvatarImage
             src={user.image}

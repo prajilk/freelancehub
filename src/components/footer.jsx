@@ -8,7 +8,7 @@ const Footer = () => {
 
   return (
     <footer
-      className={`${pathname === "/login" || (pathname === "/register" && "hidden")} container-lg py-10 md:pt-20`}
+      className={`${(pathname === "/login" || pathname === "/register" || pathname === "/dashboard/messages") && "hidden"} container-lg py-10 md:pt-20`}
     >
       <div className="flex flex-wrap items-center justify-between gap-5 rounded-md bg-primary p-6 text-white lg:gap-0 lg:p-10">
         <h1 className="text-2xl font-medium">

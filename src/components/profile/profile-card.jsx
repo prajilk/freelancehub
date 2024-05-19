@@ -15,16 +15,27 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import { HiBadgeCheck } from "react-icons/hi";
 import { Button } from "../ui/button";
 import ProfileDrawer from "../drawer/profile-drawer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CiGlobe } from "react-icons/ci";
 import ProfileImageModal from "../modals/profile-image";
 import { useSelector } from "react-redux";
 import MoreSocials from "./more-socials";
 import { toast } from "sonner";
+import { socket } from "../../context/socket";
 
 const ProfileCard = () => {
-  const profileData = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
   const viewMode = useSelector((state) => state.profileViewMode);
+  const profileData = useSelector((state) =>
+    viewMode ? state.client : state.user,
+  );
+  const userId = useSelector((state) => state.user._id);
+
+  function handleMessage() {
+    viewMode && socket.emit("ready-to-send-message", userId, profileData._id);
+    navigate(`/dashboard/messages?clientId=${profileData._id}`);
+  }
 
   return (
     <div className="relative flex w-full flex-wrap gap-5 rounded-2xl bg-white px-3 py-7 shadow md:gap-8 md:px-10 lg:gap-20">
@@ -39,7 +50,7 @@ const ProfileCard = () => {
           ) : (
             <FaUserCircle className="size-36 text-zinc-300 md:size-44" />
           )}
-          {profileData.profile.lookingForWork && (
+          {profileData.profile?.lookingForWork && (
             <span className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full rounded-br-none bg-green-200 px-3 py-2 text-xs font-semibold text-primary">
               <CircleCheckBig size={15} />
               Looking for work
@@ -60,18 +71,27 @@ const ProfileCard = () => {
         </h1>
         <div className="flex flex-wrap items-center gap-7">
           <div className="flex w-full justify-evenly gap-3 md:w-fit">
-            {profileData.profile.topFourSocials.map((social, i) => (
-              <Link to={profileData.socials[social]} key={i} target="_blank">
-                {<SocialIcon social={social} />}
-              </Link>
-            ))}
+            {profileData.profile?.topFourSocials.map(
+              (social, i) =>
+                profileData.socials[social] && (
+                  <Link
+                    to={profileData.socials[social]}
+                    key={i}
+                    target="_blank"
+                  >
+                    {<SocialIcon social={social} />}
+                  </Link>
+                ),
+            )}
             <MoreSocials moreSocials={profileData.socials} />
           </div>
           <div className="flex w-full justify-evenly gap-3 md:w-fit">
-            <Button className="gap-2 rounded-full">
-              <MessageCircleMore size={20} />
-              Message
-            </Button>
+            {viewMode && (
+              <Button className="gap-2 rounded-full" onClick={handleMessage}>
+                <MessageCircleMore size={20} />
+                Message
+              </Button>
+            )}
             <Button
               className="gap-2 rounded-full"
               onClick={() => {
@@ -91,21 +111,23 @@ const ProfileCard = () => {
           <div className="space-y-1">
             <span className="text-sm font-medium">Role</span>
             <h4 className="text-lg md:text-2xl">
-              {profileData.profile.role || "---"}
+              {profileData.profile?.role || "---"}
             </h4>
           </div>
           <div className="space-y-1">
             <span className="text-sm font-medium">Experience</span>
             <h4 className="text-lg md:text-2xl">
-              {profileData.profile.experience || "---"}
+              {profileData.profile?.experience || "---"}
             </h4>
           </div>
-          <div className="space-y-1">
-            <span className="text-sm font-medium">Hourly</span>
-            <h4 className="text-lg md:text-2xl">
-              ${profileData.profile.hourly || "---"}
-            </h4>
-          </div>
+          {profileData.profile?.hourly && (
+            <div className="space-y-1">
+              <span className="text-sm font-medium">Hourly</span>
+              <h4 className="text-lg md:text-2xl">
+                ${profileData.profile?.hourly}
+              </h4>
+            </div>
+          )}
         </div>
 
         <span className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground md:justify-start">

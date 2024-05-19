@@ -17,12 +17,12 @@ const ProtectedRoute = () => {
 
   const { isLoading, isError } = useVerify();
 
-  if (isLoading) {
-    return <PageLoading />;
-  }
   if (isError) {
     localStorage.removeItem("token");
     navigate(`/login?callback=${callback}`);
+  }
+  if (isLoading) {
+    return <PageLoading />;
   }
 
   return (

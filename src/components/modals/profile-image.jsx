@@ -1,4 +1,4 @@
-import { Pencil, User2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -22,15 +22,15 @@ const ProfileImageModal = () => {
   const profileData = useSelector((state) => state.user);
   const [imagePic, setImagePic] = useState(profileData.image);
   const [lookingForWork, setLookingForWork] = useState(
-    profileData.profile.lookingForWork,
+    profileData.profile?.lookingForWork || false,
   );
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     setImagePic(profileData.image);
-    setLookingForWork(profileData.profile.lookingForWork);
-  }, [profileData.image, profileData.profile.lookingForWork]);
+    setLookingForWork(profileData.profile?.lookingForWork || false);
+  }, [profileData.image, profileData.profile?.lookingForWork]);
 
   function onSuccess(result) {
     toast.success(result.message);

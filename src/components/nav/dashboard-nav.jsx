@@ -1,10 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Bell, Mail } from "lucide-react";
+import { MessageCircleMore } from "lucide-react";
 import { motion } from "framer-motion";
 import DashboardMobileMenu from "./dashboard-mobile-menu";
 import { Profile } from "./profile";
 import { useSelector } from "react-redux";
 import { Button } from "../ui/button";
+import NotificationSheet from "../sheets/notification";
 
 const DashboardNav = () => {
   const location = useLocation();
@@ -44,23 +45,21 @@ const DashboardNav = () => {
           </li>
         </ul>
 
-        <div className="flex flex-1 items-center justify-end gap-5">
-          <div className="relative">
-            <Mail className="cursor-pointer text-zinc-400" />
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="absolute -right-1 top-0 size-2.5 rounded-full bg-red-500"
-            ></motion.span>
-          </div>
-          <div className="relative">
-            <Bell className="cursor-pointer text-zinc-400" />
-            <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="absolute -right-0.5 top-0 size-2.5 rounded-full bg-red-500"
-            ></motion.span>
-          </div>
+        <div className="flex flex-1 items-center justify-end gap-2">
+          <NotificationSheet />
+          <Link to={"/dashboard/messages"}>
+            <Button
+              className="relative flex size-9 items-center justify-center rounded-full p-1 text-zinc-400 hover:bg-transparent hover:text-zinc-400"
+              variant="ghost"
+            >
+              <MessageCircleMore />
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="absolute right-1 top-1 hidden size-2.5 rounded-full bg-red-500"
+              ></motion.span>
+            </Button>
+          </Link>
           {isAuthorized ? (
             <Profile />
           ) : (

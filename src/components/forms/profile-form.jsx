@@ -68,7 +68,7 @@ export function ProfileForm() {
       lastName: profileData?.lastName || "",
       role: profileData?.profile.role || "",
       experience: profileData?.profile.experience || "",
-      hourly: profileData?.profile.hourly.toString() || "",
+      hourly: profileData?.profile?.hourly?.toString() || "",
       country: profileData?.country || "",
     },
   });

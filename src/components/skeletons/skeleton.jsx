@@ -20,7 +20,7 @@ const Skeleton = ({ className }) => {
           duration: 1.5,
           repeat: Infinity,
         }}
-        className="absolute h-full w-full bg-gradient-to-r from-transparent via-zinc-300 to-transparent"
+        className="absolute h-full w-full bg-gradient-to-r from-transparent via-white/50 to-transparent"
       ></motion.div>
     </div>
   );

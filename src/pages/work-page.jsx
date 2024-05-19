@@ -16,27 +16,51 @@ import {
   TooltipTrigger,
 } from "../components/ui/tooltip";
 import { Switch } from "../components/ui/switch";
-import { FaBriefcase, FaUser } from "react-icons/fa";
+import { FaBriefcase, FaCheckCircle, FaUser } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import ApplyWorkSheet from "../components/sheets/apply-work";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUpdateWorkStatus } from "../api/work/updated-work-status";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import DeleteWork from "../components/modals/delete-work";
-import WorkApplicantsList from "../components/work-applicants-list";
+import WorkApplicantsList from "../components/works/work-applicants-list";
+import { useBookmarks } from "../api/bookmarks";
+import { useUpdateBookmark } from "../api/updated-bookmark";
 
 const WorkPage = () => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const queryClient = useQueryClient();
   const location = useLocation();
   const workId = location.pathname.split("/").at(-1);
   const user = useSelector((state) => state.user._id);
 
   const { data: work, isLoading, error } = useWork(workId);
+  const { data: bookmarks } = useBookmarks();
 
   const isAdmin = user === work?.userId;
 
+  useEffect(() => {
+    setIsBookmarked(
+      bookmarks?.find((bookmark) => bookmark.workId === work?._id)
+        ? true
+        : false,
+    );
+  }, [bookmarks]);
+
   if (error?.response.status === 404) {
     return <Error404 />;
+  }
+
+  function onSuccess(result) {
+    toast.success(result.message);
+    queryClient.invalidateQueries(["bookmarks"]);
+    setIsBookmarked(result.bookmarked);
+  }
+  const mutation = useUpdateBookmark(onSuccess);
+
+  function handleBookmark() {
+    mutation.mutate({ workId: work?._id });
   }
 
   return (
@@ -99,8 +123,8 @@ const WorkPage = () => {
                 ) : (
                   <>
                     {work?.hasApplied ? (
-                      <span className="py-3 text-center font-semibold text-primary">
-                        Applied!
+                      <span className="flex items-center justify-center gap-2 py-3 font-semibold text-primary">
+                        <FaCheckCircle /> Applied!
                       </span>
                     ) : !user ? (
                       <Link
@@ -119,8 +143,8 @@ const WorkPage = () => {
                       />
                     )}
                     <Button
-                      disabled={isAdmin}
-                      className="gap-1 rounded-full border-2 border-primary bg-transparent text-primary transition-transform duration-300 hover:text-white active:scale-95"
+                      onClick={handleBookmark}
+                      className={`${isBookmarked ? "bg-primary text-white" : "bg-transparent text-primary"} gap-1 rounded-full border-2 border-primary transition-transform duration-300 hover:text-white active:scale-95`}
                     >
                       <Bookmark />
                       Bookmark

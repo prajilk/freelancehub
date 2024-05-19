@@ -3,8 +3,10 @@ import AboutModal from "../modals/about";
 import { LongText } from "../ui/long-text";
 
 const About = () => {
-  const about = useSelector((state) => state.user.profile.about);
   const viewMode = useSelector((state) => state.profileViewMode);
+  const about = useSelector((state) =>
+    viewMode ? state.client.profile?.about : state.user.profile?.about,
+  );
 
   return (
     <>
@@ -13,7 +15,7 @@ const About = () => {
         {!viewMode && <AboutModal about={about || ""} />}
       </div>
       <LongText line={7} maxWords={700} className="mt-3">
-        {about || "---"}
+        {about || "About section is empty!"}
       </LongText>
     </>
   );

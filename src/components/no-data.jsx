@@ -1,6 +1,8 @@
-const NoData = ({ children }) => {
+import { cn } from "../lib/utils";
+
+const NoData = ({ className, children }) => {
   return (
-    <div className="my-20 flex flex-col items-center gap-10">
+    <div className={cn("my-20 flex flex-col items-center gap-10", className)}>
       <img
         src="/no_data.svg"
         alt="No data"

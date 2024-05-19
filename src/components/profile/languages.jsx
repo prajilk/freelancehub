@@ -1,8 +1,10 @@
-import { Pencil, Plus } from "lucide-react";
 import { useSelector } from "react-redux";
+import AddLanguageModal from "../modals/add-language";
+import EditLanguageModal from "../modals/edit-langauge";
 
 const Languages = () => {
   const viewMode = useSelector((state) => state.profileViewMode);
+  const languages = useSelector((state) => state.user.profile.languages);
 
   return (
     <>
@@ -10,22 +12,30 @@ const Languages = () => {
         <h1 className="text-xl font-bold">Languages</h1>
         {!viewMode && (
           <div className="flex gap-2">
-            <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-              <Plus size={20} />
-            </button>
-            <button className="flex size-10 items-center justify-center rounded-full border bg-primary/15 text-primary">
-              <Pencil size={18} />
-            </button>
+            <AddLanguageModal
+              defaultLanguages={
+                languages?.map((language) => language.language.label) || []
+              }
+            />
+            <EditLanguageModal languages={languages} />
           </div>
         )}
       </div>
       <ul className="mt-3 space-y-2">
-        <li className="font-medium">
-          English: <span className="text-muted-foreground">Fluent</span>
-        </li>
-        <li className="font-medium">
-          Spanish: <span className="text-muted-foreground">Conversational</span>
-        </li>
+        {languages?.length === 0 ? (
+          <span className="text-sm text-muted-foreground">
+            Language is not added!
+          </span>
+        ) : (
+          languages?.map((language, i) => (
+            <li className="font-medium" key={i}>
+              {language.language.label}:{" "}
+              <span className="text-muted-foreground">
+                {language.proficiency.label}
+              </span>
+            </li>
+          ))
+        )}
       </ul>
     </>
   );

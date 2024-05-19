@@ -1,7 +1,7 @@
 import Hero from "../components/hero/hero";
 import Section1 from "../components/highlights/section1";
 import Section2 from "../components/highlights/section2";
-import Jobs from "../components/jobs";
+import Jobs from "../components/jobs/jobs";
 import Nav from "../components/nav/nav";
 import Testimonials from "../components/testimonials";
 

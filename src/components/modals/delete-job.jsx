@@ -1,5 +1,4 @@
 import { toast } from "sonner";
-import { useDeleteWork } from "../../api/work/delete-work";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -34,7 +33,7 @@ const DeleteJob = ({ jobId }) => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
+        <DialogHeader className={"space-y-4"}>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete this job

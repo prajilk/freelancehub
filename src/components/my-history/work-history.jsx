@@ -1,7 +1,7 @@
 import { useWorkHistory } from "../../api/work/get-work-history";
 import NoData from "../no-data";
-import WorkJobCardSkeletons from "../skeletons/work-card";
-import WorkCard from "../work-card";
+import WorkJobCardSkeletons from "../skeletons/work-job-card";
+import WorkCard from "../works/work-card";
 
 const WorkHistory = () => {
   const { data: workHistory, isLoading } = useWorkHistory();

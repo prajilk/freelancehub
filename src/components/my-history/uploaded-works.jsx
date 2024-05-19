@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import WorkCard from "../work-card";
+import WorkCard from "../works/work-card";
 import { useUserWorks } from "../../api/work/get-user-works";
-import WorkJobCardSkeletons from "../skeletons/work-card";
+import WorkJobCardSkeletons from "../skeletons/work-job-card";
 import NoData from "../no-data";
 
 const UploadedWorks = () => {

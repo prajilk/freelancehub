@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
-import { useSubmitProposal } from "../../api/work/submit-proposal";
 import LoadingButton from "../ui/loading-button";
 import { useSubmitApplication } from "../../api/job/submit-application";
 import { useQueryClient } from "@tanstack/react-query";

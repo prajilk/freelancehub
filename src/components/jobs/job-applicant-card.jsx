@@ -1,12 +1,20 @@
 import { FaEye } from "react-icons/fa";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Card, CardContent } from "./ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Card, CardContent } from "../ui/card";
 import { IoChatbubbleEllipses } from "react-icons/io5";
-import { LongText } from "./ui/long-text";
-import { Link } from "react-router-dom";
-import { formatTimeAgo } from "../lib/utils";
+import { LongText } from "../ui/long-text";
+import { Link, useNavigate } from "react-router-dom";
+import { formatTimeAgo } from "../../lib/utils";
+import { socket } from "../../context/socket";
 
-const JobApplicantCard = ({ application }) => {
+const JobApplicantCard = ({ application, user }) => {
+  const navigate = useNavigate();
+
+  function handleMessage() {
+    socket.emit("ready-to-send-message", user, application.user._id);
+    navigate(`/dashboard/messages?clientId=${application.user._id}`);
+  }
+
   return (
     <Card>
       <CardContent className="grid gap-5 p-5 md:grid-cols-2 md:p-10">
@@ -34,7 +42,10 @@ const JobApplicantCard = ({ application }) => {
                   <FaEye size={20} />
                 </button>
               </Link>
-              <button className="flex size-9 items-center justify-center rounded-full bg-primary/30 p-1 text-primary">
+              <button
+                className="flex size-9 items-center justify-center rounded-full bg-primary/30 p-1 text-primary"
+                onClick={handleMessage}
+              >
                 <IoChatbubbleEllipses size={20} />
               </button>
             </div>

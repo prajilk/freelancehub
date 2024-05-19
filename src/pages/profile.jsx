@@ -4,21 +4,29 @@ import About from "../components/profile/about";
 import Portfolio from "../components/profile/portfolio";
 import Skills from "../components/profile/skills";
 import Languages from "../components/profile/languages";
-import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useProfile } from "../api/get-profile";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setUser } from "../redux/userSlice";
 import PageLoading from "../components/common/page-loading";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { disableViewMode, setToViewMode } from "../redux/profileViewModeSlice";
 import Education from "../components/profile/education";
 
 const Profile = () => {
-  const userId = useLocation().pathname.split("/").at(-1);
   const basePath = useLocation().pathname.split("/")[1];
+  const callback = useLocation().pathname;
 
-  const { data: profile, isLoading } = useProfile(userId);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate(`/login?callback=${callback}`);
+    }
+  }, []);
+
+  const { data: profile, isLoading } = useProfile();
 
   const dispatch = useDispatch();
 

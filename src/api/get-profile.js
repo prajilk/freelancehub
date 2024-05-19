@@ -1,23 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "../config/axios";
 
-async function handleProfile(userId) {
+async function handleProfile() {
     const token = localStorage.getItem("token");
     const { data } = await axios.get("/api/user/profile", {
         headers: {
             Authorization: `Bearer ${token}`
-        },
-        params: {
-            user: userId
         }
     });
     return data;
 }
 
-export function useProfile(userId) {
+export function useProfile() {
     return useQuery({
         queryKey: ["profile"],
-        queryFn: () => handleProfile(userId),
+        queryFn: handleProfile,
         retry: false
     });
 }

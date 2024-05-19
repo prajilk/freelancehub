@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 const Portfolio = () => {
   const viewMode = useSelector((state) => state.profileViewMode);
+
   return (
     <>
       <div className="flex items-center justify-between">

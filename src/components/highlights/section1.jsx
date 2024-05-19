@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const Section1 = () => {
   return (
-    <section className="container-lg grid gap-10 pt-28 lg:grid-cols-2 lg:gap-0 lg:pb-20 lg:pt-40">
+    <section className="container-lg grid gap-10 overflow-hidden pt-28 lg:grid-cols-2 lg:gap-0 lg:pb-20 lg:pt-40">
       <motion.div
         initial={{
           opacity: 0,

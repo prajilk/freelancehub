@@ -1,6 +1,7 @@
-import SavedJobs from "../components/bookmarks/saved-jobs";
-import SavedWorks from "../components/bookmarks/saved-works";
+import SavedJobs from "../components/bookmark/saved-jobs";
+import SavedWorks from "../components/bookmark/saved-works";
 import DashboardNav from "../components/nav/dashboard-nav";
+import NoData from "../components/no-data";
 import {
   Tabs,
   TabsContent,
@@ -29,10 +30,10 @@ const Bookmarks = () => {
               Saved jobs
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="saved-jobs">
+          <TabsContent value="saved-jobs" className="pt-5">
             <SavedJobs />
           </TabsContent>
-          <TabsContent value="saved-works">
+          <TabsContent value="saved-works" className="pt-5">
             <SavedWorks />
           </TabsContent>
         </Tabs>

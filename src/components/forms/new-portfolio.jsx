@@ -18,6 +18,11 @@ import { useState } from "react";
 import { skillsArray } from "../../lib/skills";
 import { DrawerClose } from "../ui/drawer";
 import AddPortfolioImage from "../portfolio/add-portfolio-image";
+import { toast } from "sonner";
+import { useCreatePortfolio } from "../../api/create-portfolio";
+import LoadingButton from "../ui/loading-button";
+import { useDispatch } from "react-redux";
+import { updatePortfolio } from "../../redux/portfolioSlice";
 
 const portfolioSchema = z.object({
   title: z.string().min(2, {
@@ -29,7 +34,13 @@ const portfolioSchema = z.object({
   links: z.string().optional(),
 });
 
-export function NewPortfolioForm() {
+export function NewPortfolioForm({ closeDrawer }) {
+  const [projectImages, setProjectImages] = useState([]);
+  const [skills, setSkills] = useState(null);
+  const [isNoSkillsError, setIsNoSkillsError] = useState(false);
+
+  const dispatch = useDispatch();
+
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(portfolioSchema),
@@ -40,17 +51,39 @@ export function NewPortfolioForm() {
     },
   });
 
-  // 2. Define a submit handler.
-  function onSubmit(values) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  function onSuccess(result) {
+    dispatch(updatePortfolio(result.newPortfolio));
+    toast.success("Portfolio created successfully.");
+    setTimeout(() => {
+      toast.success(result.message);
+    }, 2000);
+    form.reset(); // Reset all form fields
+    setSkills(null); // Remove all skills previously selected
+    setProjectImages([]); // Remove all images previously selected
+    closeDrawer();
   }
 
-  const [projectImages, setProjectImages] = useState([]);
-  const [skills, setSkills] = useState(null);
+  const mutation = useCreatePortfolio(onSuccess);
+
+  // 2. Define a submit handler.
+  function onSubmit(values) {
+    if (!skills || skills.length === 0) {
+      return setIsNoSkillsError(true);
+    }
+    if (projectImages.length === 0) {
+      return toast.error("At least add one project image!");
+    }
+
+    mutation.mutate({
+      ...values,
+      skills,
+      links: values.links.split(",").map((link) => link.trim()),
+      images: projectImages,
+    });
+  }
 
   const handleSkillsChange = (value) => {
+    setIsNoSkillsError(false);
     setSkills(value);
   };
 
@@ -112,6 +145,11 @@ export function NewPortfolioForm() {
                 isSearchable
                 primaryColor="green"
               />
+              {isNoSkillsError && (
+                <span className="text-sm font-medium text-destructive">
+                  Must be add at least one skill
+                </span>
+              )}
             </div>
 
             <FormField
@@ -119,7 +157,9 @@ export function NewPortfolioForm() {
               name="links"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-lg font-semibold">Links</FormLabel>
+                  <FormLabel className="text-lg font-semibold">
+                    Links &#040;optional&#041;
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Add link"
@@ -152,7 +192,9 @@ export function NewPortfolioForm() {
               Cancel
             </Button>
           </DrawerClose>
-          <Button type="submit">Submit</Button>
+          <LoadingButton isLoading={mutation.isPending} type="submit">
+            Submit
+          </LoadingButton>
         </div>
       </form>
     </Form>

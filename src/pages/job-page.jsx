@@ -19,24 +19,48 @@ import {
 } from "../components/ui/tooltip";
 import { useSelector } from "react-redux";
 import ApplyJobSheet from "../components/sheets/apply-job";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useUpdateJobStatus } from "../api/job/updated-job-status";
 import DeleteJob from "../components/modals/delete-job";
-import JobApplicantsList from "../components/job-applicants-list";
+import JobApplicantsList from "../components/jobs/job-applicants-list";
+import { useBookmarks } from "../api/bookmarks";
+import { useUpdateBookmark } from "../api/updated-bookmark";
 
 const JobPage = () => {
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const queryClient = useQueryClient();
   const location = useLocation();
   const jobId = location.pathname.split("/").at(-1);
   const user = useSelector((state) => state.user._id);
 
   const { data: job, isLoading, error } = useJob(jobId);
+  const { data: bookmarks } = useBookmarks();
 
   const isAdmin = user === job?.userId;
 
+  useEffect(() => {
+    setIsBookmarked(
+      bookmarks?.find((bookmark) => bookmark.workId === work?._id)
+        ? true
+        : false,
+    );
+  }, [bookmarks]);
+
   if (error?.response?.status === 404) {
     return <Error404 />;
+  }
+
+  function onSuccess(result) {
+    toast.success(result.message);
+    queryClient.invalidateQueries(["bookmarks"]);
+    setIsBookmarked(result.bookmarked);
+  }
+  const mutation = useUpdateBookmark(onSuccess);
+
+  function handleBookmark() {
+    mutation.mutate({ jobId: job?._id });
   }
 
   return (
@@ -116,8 +140,8 @@ const JobPage = () => {
                       />
                     )}
                     <Button
-                      disabled={isAdmin}
-                      className="gap-1 rounded-full border-2 border-primary bg-transparent text-primary transition-transform duration-300 hover:text-white active:scale-95"
+                      onClick={handleBookmark}
+                      className={`${isBookmarked ? "bg-primary text-white" : "bg-transparent text-primary"} gap-1 rounded-full border-2 border-primary transition-transform duration-300 hover:text-white active:scale-95`}
                     >
                       <Bookmark />
                       Bookmark
