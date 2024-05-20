@@ -6,6 +6,7 @@ import NoData from "../components/no-data";
 import { socket } from "../context/socket";
 import { useChats } from "../api/get-chats";
 import { useSearchParams } from "react-router-dom";
+import { HashLoader } from "react-spinners";
 
 const Messages = () => {
   const clientId = useSearchParams()[0].get("clientId");
@@ -14,7 +15,7 @@ const Messages = () => {
   const [showChatArea, setShowChatArea] = useState(true);
   const [newChats, setNewChats] = useState();
 
-  const { data: chats } = useChats();
+  const { data: chats, isLoading } = useChats();
 
   useEffect(() => {
     setNewChats(chats);
@@ -80,8 +81,19 @@ const Messages = () => {
         </div>
       ) : (
         <div className="container-lg mt-5 md:mt-10">
-          <h1 className="text-2xl font-semibold md:text-3xl">Messages</h1>
-          <NoData>No Chats Found!</NoData>
+          {isLoading ? (
+            <div className="flex min-h-[calc(100dvh_-_104px)] flex-col items-center justify-center gap-3">
+              <HashLoader color="#258D60" />
+              <span className="font-medium text-zinc-400">
+                Loading messages...
+              </span>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-2xl font-semibold md:text-3xl">Messages</h1>
+              <NoData>No Chats Found!</NoData>
+            </>
+          )}
         </div>
       )}
     </>
