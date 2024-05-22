@@ -7,6 +7,7 @@ import { updateSearchQuery } from "../redux/searchQuerySlice";
 import { useSearchWorks } from "../api/work/search-works";
 import { useSearchJobs } from "../api/job/search-jobs";
 import { setWorks } from "../redux/worksSlice";
+import { setJobs } from "../redux/jobsSlice";
 
 const Search = ({ searchFor, setLoading }) => {
   const filter = useSelector((state) => state.filter);
@@ -15,7 +16,10 @@ const Search = ({ searchFor, setLoading }) => {
 
   const mutation = searchFor === "work" ? useSearchWorks() : useSearchJobs();
 
-  if (mutation.data) dispatch(setWorks(mutation.data));
+  if (mutation.data) {
+    if (searchFor === "work") dispatch(setWorks(mutation.data));
+    else dispatch(setJobs(mutation.data));
+  }
   setLoading(mutation.isPending);
 
   function handleApplyFilter() {
