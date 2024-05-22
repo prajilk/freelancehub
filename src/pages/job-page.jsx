@@ -42,9 +42,7 @@ const JobPage = () => {
 
   useEffect(() => {
     setIsBookmarked(
-      bookmarks?.find((bookmark) => bookmark.workId === work?._id)
-        ? true
-        : false,
+      bookmarks?.find((bookmark) => bookmark.jobId === job?._id) ? true : false,
     );
   }, [bookmarks]);
 
